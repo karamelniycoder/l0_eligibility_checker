@@ -1,5 +1,6 @@
 from loguru import logger
 from sys import stderr
+from time import sleep
 
 import settings
 from browser import Browser
@@ -35,10 +36,13 @@ if __name__ == "__main__":
             total_eligibility += 1
             total_tokens += result["tokens"]
     eligible_percent = round(total_eligibility / len(addresses) * 100, 2)
+    total_tokens = round(total_tokens, 2)
 
     excel.edit_table(wallet_data=[f"Total eligible addresses: [{total_eligibility}/{len(addresses)}]"])
     excel.edit_table(wallet_data=[f"Total tokens: {total_tokens} $ZRO"])
 
     print('\n')
+    sleep(0.1)
     logger.success(f'Results saved in "results/{excel.file_name}"\n\nTotal eligibility: {eligible_percent}% [{total_eligibility}/{len(addresses)}] with {total_tokens} $ZRO\n\n')
+    sleep(0.1)
     input('> Exit')
