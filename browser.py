@@ -61,8 +61,12 @@ class Browser:
     def get_eligibility(self, address: str, retry: int = 0):
         try:
             r = self.session.get(f"https://www.layerzero.foundation/api/allocation/{address.lower()}")
-            status = "Eligible" if r.json()["isEligible"] else "Not Eligible"
-            tokens = float(r.json()["zroAllocation"]["asString"])
+            if r.json().get("error") == "Record not found":
+                status = "Not Eligible"
+                tokens = 0
+            else:
+                status = "Eligible" if r.json()["isEligible"] else "Not Eligible"
+                tokens = float(r.json()["zroAllocation"]["asString"])
 
             if status == "Eligible":
                 logger.success(f'[+] Browser | {address} ELIGIBLE | {tokens} $ZRO')
